@@ -1,9 +1,12 @@
 ﻿using Spectre.Console;
 using static IpInfo.Functions;
-using MagmaMc.JEF;
 using System.Diagnostics;
+using System.Security.Principal;
+using System.Runtime.Versioning;
 
 namespace IpInfo;
+
+[SupportedOSPlatform("windows")]
 internal class MainScript
 {
     static void Main(string[] ConsoleArgs)
@@ -26,7 +29,7 @@ internal class MainScript
             Console.WriteLine(GetDefaultGateway());
         else if (ConsoleArgs.Contains("install"))
         {
-            if (!JEF.Administrator.IsElevated())
+            if (!new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
             {
                 ProcessStartInfo processStartInfo = new ProcessStartInfo(AppDomain.CurrentDomain.FriendlyName + ".exe", "install");
                 processStartInfo.Verb = "runas";
